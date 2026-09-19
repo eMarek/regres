@@ -14,7 +14,16 @@ npm install
 npm run dev     # start the app locally
 npm test        # unit tests for the calculation and the amounts table
 npm run build   # type-check + production build
+npm run preview # serve the production build at http://localhost:4173/regres/
 ```
+
+## Deployment
+
+Live at **https://emarek.github.io/regres/** (GitHub Pages).
+
+Every push to `main` runs [.github/workflows/deploy.yml](.github/workflows/deploy.yml): lint → tests → build → publish. If a test fails, nothing is published. The workflow can also be started by hand from the Actions tab.
+
+Pages serves the app from the `/regres/` subfolder, so [vite.config.ts](vite.config.ts) sets that as `base` for the production build and preview; the dev server stays at `/`. If the repository is ever renamed, update `base` to match. One-time repository setting: Settings → Pages → Source = "GitHub Actions".
 
 ## Statutory amounts
 
