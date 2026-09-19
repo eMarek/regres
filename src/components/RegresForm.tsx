@@ -1,6 +1,7 @@
 import { getAvailableYears, type RegresType } from '../data/regresAmounts'
 import type { Method, ValidationError } from '../lib/calculateRegres'
 import { formatEUR } from '../lib/format'
+import { DateField } from './DateField'
 import { SegmentedControl } from './SegmentedControl'
 
 export interface FormValues {
@@ -129,45 +130,27 @@ export function RegresForm({
         </p>
       )}
 
-      <div className="field-row">
-        <div className="field">
-          <label htmlFor="start">Začetek zaposlitve</label>
-          <input
-            id="start"
-            type="date"
-            min={`${values.year}-01-01`}
-            max={`${values.year}-12-31`}
-            value={values.start}
-            aria-invalid={startError ? true : undefined}
-            aria-describedby={startError ? 'start-error' : undefined}
-            onChange={(event) => onChange({ start: event.target.value })}
-          />
-        </div>
-
-        <div className="field">
-          <label htmlFor="end">Zadnji dan zaposlitve</label>
-          <input
-            id="end"
-            type="date"
-            min={values.start || `${values.year}-01-01`}
-            max={`${values.year}-12-31`}
-            value={values.end}
-            aria-invalid={endError ? true : undefined}
-            aria-describedby={endError ? 'end-error' : undefined}
-            onChange={(event) => onChange({ end: event.target.value })}
-          />
-        </div>
+      {/* Keyed by year: a year switch resets the dates, including half-typed text. */}
+      <div className="field-row" key={values.year}>
+        <DateField
+          id="start"
+          label="Začetek zaposlitve"
+          min={`${values.year}-01-01`}
+          max={`${values.year}-12-31`}
+          value={values.start}
+          error={startError && ERROR_MESSAGES[startError]}
+          onChange={(start) => onChange({ start })}
+        />
+        <DateField
+          id="end"
+          label="Zadnji dan zaposlitve"
+          min={values.start || `${values.year}-01-01`}
+          max={`${values.year}-12-31`}
+          value={values.end}
+          error={endError && ERROR_MESSAGES[endError]}
+          onChange={(end) => onChange({ end })}
+        />
       </div>
-      {startError && (
-        <p id="start-error" className="field-error">
-          {ERROR_MESSAGES[startError]}
-        </p>
-      )}
-      {endError && (
-        <p id="end-error" className="field-error">
-          {ERROR_MESSAGES[endError]}
-        </p>
-      )}
 
       {values.type === 'summer' ? (
         <fieldset className="methods">

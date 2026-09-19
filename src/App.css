@@ -177,18 +177,24 @@
   border-radius: 8px;
 }
 
-/* The native select arrow can't be positioned, so it is replaced by a chevron
+/* Browsers draw their own arrows on selects and date inputs, each differently
+   and none of them positionable. They are all replaced by this one chevron,
    drawn in the text color (follows both themes and forced colors). */
-.select-wrap {
+.select-wrap,
+.date-field {
   position: relative;
 }
 
-.field select {
+.field select,
+.date-field input[type='text'],
+.date-display {
   appearance: none;
   padding-right: 44px;
 }
 
-.select-wrap::after {
+.select-wrap::after,
+.date-field-touch::after,
+.date-picker-button::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -198,6 +204,78 @@
   border-right: 2px solid var(--text);
   border-bottom: 2px solid var(--text);
   transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+
+/* Date field (see DateField.tsx) */
+
+.field input::placeholder,
+.date-placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+/* Touch: the formatted date is drawn here, styled like the other inputs... */
+.date-display {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  padding-left: 12px;
+  background: var(--surface);
+  border: 1px solid var(--control-border);
+  border-radius: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* ...and the real date input lies invisibly on top, so a tap opens the
+   native picker. Its focus and error states are shown on the drawn field. */
+.field .date-native-overlay {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  /* iOS Safari gives date inputs an intrinsic minimum width that ignores
+     width: 100% and would stick out of the card; these reset it. */
+  appearance: none;
+  min-width: 0;
+  max-width: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.date-field-touch:has(.date-native-overlay:focus-visible) .date-display {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.date-field-touch:has(.date-native-overlay[aria-invalid='true']) .date-display {
+  border: 2px solid var(--danger);
+}
+
+/* Desktop: the chevron is a button that opens the native calendar, which is
+   anchored to a hidden date input stretched under the field. */
+.date-picker-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 44px;
+  height: 100%;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+}
+
+.date-picker-button:focus-visible {
+  outline-offset: -4px;
+}
+
+.field .date-native-hidden {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  opacity: 0;
   pointer-events: none;
 }
 
