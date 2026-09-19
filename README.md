@@ -14,16 +14,21 @@ npm install
 npm run dev     # start the app locally
 npm test        # unit tests for the calculation and the amounts table
 npm run build   # type-check + production build
-npm run preview # serve the production build at http://localhost:4173/regres/
+npm run preview # serve the production build at http://localhost:4173/
 ```
 
 ## Deployment
 
-Live at **https://emarek.github.io/regres/** (GitHub Pages).
+Live at **https://regres.bregant.si/** (GitHub Pages with a custom domain). The old address, emarek.github.io/regres/, redirects there.
 
 Every push to `main` runs [.github/workflows/deploy.yml](.github/workflows/deploy.yml): lint → tests → build → publish. If a test fails, nothing is published. The workflow can also be started by hand from the Actions tab.
 
-Pages serves the app from the `/regres/` subfolder, so [vite.config.ts](vite.config.ts) sets that as `base` for the production build and preview; the dev server stays at `/`. If the repository is ever renamed, update `base` to match. One-time repository setting: Settings → Pages → Source = "GitHub Actions".
+Setup that lives outside this repository:
+
+- **DNS**: `regres.bregant.si` is a `CNAME` to `emarek.github.io`.
+- **GitHub** (Settings → Pages): Source = "GitHub Actions", Custom domain = `regres.bregant.si`, Enforce HTTPS on. With an Actions deployment the domain is stored in this setting, so no `CNAME` file is needed in the repo.
+
+The app is served from the root of the domain, so Vite's default `base: '/'` applies. If the custom domain is ever removed, the site falls back to the `/regres/` subfolder and [vite.config.ts](vite.config.ts) needs `base: '/regres/'`, otherwise the page loads blank.
 
 ## Statutory amounts
 

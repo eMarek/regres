@@ -2,10 +2,9 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
-export default defineConfig(({ command, isPreview }) => ({
+// The app is served from the root of its own domain (regres.bregant.si), so
+// the default base "/" is correct. It would need a base like "/regres/" only
+// if it were served from a subfolder such as emarek.github.io/regres/.
+export default defineConfig({
   plugins: [react()],
-  // GitHub Pages serves the app from https://emarek.github.io/regres/, so the
-  // production build (and `vite preview`, which serves that build) needs the
-  // prefix on asset URLs. The dev server stays at "/".
-  base: command === 'build' || isPreview ? '/regres/' : '/',
-}))
+})
