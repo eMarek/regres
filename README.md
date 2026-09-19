@@ -23,6 +23,8 @@ Live at **https://regres.bregant.si/** (GitHub Pages with a custom domain). The 
 
 Every push to `main` runs [.github/workflows/deploy.yml](.github/workflows/deploy.yml): lint → tests → build → publish. If a test fails, nothing is published. The workflow can also be started by hand from the Actions tab.
 
+To redeploy, re-run the **latest** workflow run (or start the workflow by hand). Re-running an older run rebuilds that run's old commit and publishes it over the current site.
+
 Setup that lives outside this repository:
 
 - **DNS**: `regres.bregant.si` is a `CNAME` to `emarek.github.io`.
